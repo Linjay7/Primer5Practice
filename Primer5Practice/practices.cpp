@@ -1,4 +1,4 @@
-#pragma  warning (disable:4996)
+ï»¿#pragma  warning (disable:4996)
 #include "practices.h"
 #include <iostream>
 #include <optional>
@@ -139,7 +139,7 @@ namespace practices
 			"123>Xiang@126.com<123";
 		regex e("([[:w:]]+)@([[:w:]]+)\.com");
 		cout << regex_replace(str, e, "$1 is on $2\n", 
-			regex_constants::format_no_copy/*±êÖ¾Î»£º±íÊ¾²»Êä³öÊäÈëĞòÁĞÖĞÎ´Æ¥ÅäµÄ²¿·Ö*/);
+			regex_constants::format_no_copy/*æ ‡å¿—ä½ï¼šè¡¨ç¤ºä¸è¾“å‡ºè¾“å…¥åºåˆ—ä¸­æœªåŒ¹é…çš„éƒ¨åˆ†*/);
 	}
 
 	void test5()
@@ -170,10 +170,10 @@ namespace practices
 
 	void test7()
 	{
-		//string s1 = R"(abc"()"def)";       //´íÎó
-		string s1 = R"123(abc"()"def)123";   //ÕıÈ·
-		string s2 = R"123(abc()def)123";	 //ÕıÈ·
-		string s3 = R"123((abc()def))123";   //ÕıÈ·
+		//string s1 = R"(abc"()"def)";       //é”™è¯¯
+		string s1 = R"123(abc"()"def)123";   //æ­£ç¡®
+		string s2 = R"123(abc()def)123";	 //æ­£ç¡®
+		string s3 = R"123((abc()def))123";   //æ­£ç¡®
 		cout << s1 << endl;
 		cout << s2 << endl;
 		cout << s3 << endl;
@@ -211,10 +211,10 @@ namespace practices
 		cout << 1.0_km << endl; //1000
 	}
 
-	size_t operator"" _len(char const * str, size_t size) { return size; }//¼ÆËã×Ö·û´®size
-	void operator"" _print(char const* str, size_t size) { cout << str << endl; }//´òÓ¡Êä³ö
+	size_t operator"" _len(char const * str, size_t size) { return size; }//è®¡ç®—å­—ç¬¦ä¸²size
+	void operator"" _print(char const* str, size_t size) { cout << str << endl; }//æ‰“å°è¾“å‡º
 	struct mytype { unsigned long long m; };
-	constexpr mytype operator"" _mytype(unsigned long long n) { return mytype{ n }; }//·µ»Ø×Ô¶¨ÒåÀàĞÍ
+	constexpr mytype operator"" _mytype(unsigned long long n) { return mytype{ n }; }//è¿”å›è‡ªå®šä¹‰ç±»å‹
 	void test11()
 	{
 		cout << "Hello world"_len << endl;
@@ -250,25 +250,25 @@ namespace practices
 	//	someVec.push_back({ 1, "1" });
 	//	auto s_ptr = getSome(someVec, 1);
 	//	if (s_ptr) {
-	//		cout << s_ptr->some_str << endl; // ¡°1¡±
+	//		cout << s_ptr->some_str << endl; // â€œ1â€
 	//	}
 	//	s_ptr = getSome(someVec, 2);
 	//	if (s_ptr) {
-	//		cout << s_ptr->some_str << endl; // ²»Êä³ö
+	//		cout << s_ptr->some_str << endl; // ä¸è¾“å‡º
 	//	}
 	}
 
 	void test13()
 	{
-		//´´½¨Ò»¸öÃ»ÓĞÖµµÄ¿ÉÑ¡¶ÔÏó£¬±ØĞëÖ¸¶¨°üº¬ÀàĞÍ
+		//åˆ›å»ºä¸€ä¸ªæ²¡æœ‰å€¼çš„å¯é€‰å¯¹è±¡ï¼Œå¿…é¡»æŒ‡å®šåŒ…å«ç±»å‹
 		optional<int> o1;
 		optional<int> o2(std::nullopt);
-		//´«µİÖµ½øĞĞ³õÊ¼»¯£¬Ö§³ÖÀàĞÍÍÆµ¼
+		//ä¼ é€’å€¼è¿›è¡Œåˆå§‹åŒ–ï¼Œæ”¯æŒç±»å‹æ¨å¯¼
 		optional <string> o3( "string" );
 		optional o4( "string" );
 		optional <vector<string>> o5({ "string" });
 		optional o6(vector<string>{"string"});
-		//Ê¹ÓÃmake_optional<>()¹¹Ôì
+		//ä½¿ç”¨make_optional<>()æ„é€ 
 		auto o7 = make_optional("string");
 		auto o8 = make_optional(vector<int>{1, 2, 3});
 		o8->at(0);
@@ -289,18 +289,18 @@ namespace practices
 		//std::cout << o->first; // prints 42
 
 		//std::optional<std::string> o{ "hello" };
-		//std::cout << "*o: " << *o << endl; // OK: prints ¡±hello¡±
+		//std::cout << "*o: " << *o << endl; // OK: prints â€helloâ€
 		//o = std::nullopt;
 		//std::cout << "*o: " << *o;// undefined behavior
 
 		std::optional<std::string> o{ "hello" };
-		std::cout << "*o: " << o.value_or("no value") << endl; // OK: prints ¡±hello¡±
+		std::cout << "*o: " << o.value_or("no value") << endl; // OK: prints â€helloâ€
 		o = std::nullopt;
-		//std::cout << "*o: " << o.value();//Ã»ÓĞ°üº¬Öµ£¬Ëü»áÅ×³öÒ»¸östd::bad_optional_accessÒì³£
+		//std::cout << "*o: " << o.value();//æ²¡æœ‰åŒ…å«å€¼ï¼Œå®ƒä¼šæŠ›å‡ºä¸€ä¸ªstd::bad_optional_accesså¼‚å¸¸
 		std::cout << "*o: " << o.value_or("no value");// undefined behavior
 	}
 
-	using IntFloatString = std::variant<int, float, std::string>; // ¶¨ÒåÖ§³Öint¡¢float¡¢stringÈı¸öÀàĞÍ£¬²¢È¡Ò»¸ö±ğÃû
+	using IntFloatString = std::variant<int, float, std::string>; // å®šä¹‰æ”¯æŒintã€floatã€stringä¸‰ä¸ªç±»å‹ï¼Œå¹¶å–ä¸€ä¸ªåˆ«å
 	void test15()
 	{
 		try
@@ -317,9 +317,9 @@ namespace practices
 			cout << "std::get<string>(): " << std::get<std::string>(s) << endl;
 			cout << "std::get<2>(): " << std::get<2>(s) << endl;
 
-			//´íÎóÓÃ·¨
-			//cout << std::get<double>(f) << endl;//±àÒë½×¶Î¾Í»á³ö´í£ºÃ»ÓĞdoubleÀàĞÍ
-			cout << std::get<1>(i) << endl;       //µ÷ÊÔ½×¶ÎÅ×³öÒì³££ºintÀàĞÍµÄ±êÖ¾Î»ÊÇ0
+			//é”™è¯¯ç”¨æ³•
+			//cout << std::get<double>(f) << endl;//ç¼–è¯‘é˜¶æ®µå°±ä¼šå‡ºé”™ï¼šæ²¡æœ‰doubleç±»å‹
+			cout << std::get<1>(i) << endl;       //è°ƒè¯•é˜¶æ®µæŠ›å‡ºå¼‚å¸¸ï¼šintç±»å‹çš„æ ‡å¿—ä½æ˜¯0
 		}
 		catch (const std::exception& e)
 		{
@@ -367,12 +367,12 @@ namespace practices
 		int n = 0;
 		foo f;
 		baz b;
-		std::thread t1;                  // Î´¶¨ÒåÏß³Ì
-		std::thread t2(f1, n + 1);       // Öµ´«µİ
-		std::thread t3(f2, std::ref(n)); // ÒıÓÃ´«µİ£¬Ê¹ÓÃ&ÎŞĞ§
-		std::thread t4(std::move(t3));   // t4 ÔËĞĞ f2(). t3 ²»ÔÙÊÇÒ»¸öÏß³Ì
-		std::thread t5(&foo::bar, &f, 1);// ²ÎÊı¿ÉÒÔÊÇÀà³ÉÔ±º¯Êı
-		std::thread t6(b);               // »¹¿ÉÒÔÊÇº¯Êı¶ÔÏó
+		std::thread t1;                  // æœªå®šä¹‰çº¿ç¨‹
+		std::thread t2(f1, n + 1);       // å€¼ä¼ é€’
+		std::thread t3(f2, std::ref(n)); // å¼•ç”¨ä¼ é€’ï¼Œä½¿ç”¨&æ— æ•ˆ
+		std::thread t4(std::move(t3));   // t4 è¿è¡Œ f2(). t3 ä¸å†æ˜¯ä¸€ä¸ªçº¿ç¨‹
+		std::thread t5(&foo::bar, &f, 1);// å‚æ•°å¯ä»¥æ˜¯ç±»æˆå‘˜å‡½æ•°
+		std::thread t6(b);               // è¿˜å¯ä»¥æ˜¯å‡½æ•°å¯¹è±¡
 		t2.join();
 		t4.join();
 		t5.join();
@@ -401,8 +401,8 @@ namespace practices
 		t1.join();
 	}
 
-	mutex g_lock; //È«¾Ö»¥³âËø¶ÔÏó£¬#include <mutex>
-	void printer(const char *str) { // ´òÓ¡»ú 
+	mutex g_lock; //å…¨å±€äº’æ–¥é”å¯¹è±¡ï¼Œ#include <mutex>
+	void printer(const char *str) { // æ‰“å°æœº 
 		lock_guard<std::mutex> locker(g_lock);
 		while (*str != '\0') {
 			cout << *str;
@@ -411,7 +411,7 @@ namespace practices
 		}
 		cout << endl;
 	}
-	void func1() {  //×ÓÏß³Ì
+	void func1() {  //å­çº¿ç¨‹
 		printer("hello");
 	}
 	void test19()
@@ -432,37 +432,33 @@ namespace practices
 	{
 		std::cout << "Starting call thread.\n";
 		std::thread t(subThread);
-		if(t.joinable()) t.join();
-		std::this_thread::sleep_for(std::chrono::microseconds(10));
+		t.detach();
 		std::cout << "Exiting call thread.\n";
-		std::this_thread::sleep_for(std::chrono::microseconds(100));//µÈ´ı×ÓÏß³Ì½áÊø
+		std::this_thread::sleep_for(std::chrono::microseconds(100));//ç­‰å¾…å­çº¿ç¨‹ç»“æŸ
 	}
 
-	std::deque<int> q;						//Ë«¶Ë¶ÓÁĞ±ê×¼ÈİÆ÷È«¾Ö±äÁ¿
-	std::mutex mu;							//»¥³âËøÈ«¾Ö±äÁ¿
-	std::condition_variable cond;           //È«¾ÖÌõ¼ş±äÁ¿
-	void function_1() {//Éú²úÕß£¬Íù¶ÓÁĞ·ÅÈëÊı¾İ
+	std::deque<int> q;						//åŒç«¯é˜Ÿåˆ—æ ‡å‡†å®¹å™¨å…¨å±€å˜é‡
+	std::mutex mu;							//äº’æ–¥é”å…¨å±€å˜é‡
+	std::condition_variable cond;           //å…¨å±€æ¡ä»¶å˜é‡
+	void function_1() {//ç”Ÿäº§è€…ï¼Œå¾€é˜Ÿåˆ—æ”¾å…¥æ•°æ®
 		for (size_t i = 10; i > 0; i--) {
 			std::unique_lock<std::mutex> locker(mu);
-			q.push_front(i);			//Êı¾İÈë¶ÓËø±£»¤
+			q.push_front(i);			//æ•°æ®å…¥é˜Ÿé”ä¿æŠ¤
 			locker.unlock();
-			cond.notify_one();          //ÏòÒ»¸öµÈ´ıÏß³Ì·¢³ö¡°Ìõ¼şÒÑÂú×ã¡±µÄÍ¨Öª
-			//cond.notify_all();          //Ïò¶à¸öµÈ´ıÏß³Ì·¢³ö¡°Ìõ¼şÒÑÂú×ã¡±µÄÍ¨Öª
-			std::this_thread::sleep_for(std::chrono::seconds(1));		//ÑÓÊ±1Ãë
+			cond.notify_one();          //å‘ä¸€ä¸ªç­‰å¾…çº¿ç¨‹å‘å‡ºâ€œæ¡ä»¶å·²æ»¡è¶³â€çš„é€šçŸ¥
+			//cond.notify_all();          //å‘å¤šä¸ªç­‰å¾…çº¿ç¨‹å‘å‡ºâ€œæ¡ä»¶å·²æ»¡è¶³â€çš„é€šçŸ¥
+			std::this_thread::sleep_for(std::chrono::seconds(1));		//å»¶æ—¶1ç§’
 		}
 	}
-	void function_2() {//Ïû·ÑÕß£¬´Ó¶ÓÁĞÌáÈ¡Êı¾İ
+	void function_2() {//æ¶ˆè´¹è€…ï¼Œä»é˜Ÿåˆ—æå–æ•°æ®
 		int data = 0;
 		while (data != 1) {
 			std::unique_lock<std::mutex> locker(mu);
-			if (!q.empty()) {			//ÅĞ¶Ï¶ÓÁĞÊÇ·ñÎª¿Õ
-				while (q.empty())       //ÅĞ¶Ï¶ÓÁĞÊÇ·ñÎª¿Õ£¬»½ĞÑºóÔÙ´Î¼ì²é¶ÓÁĞ
-					cond.wait(locker);  //½âËø»¥³âÁ¿²¢ÏİÈëĞİÃßÒÔµÈ´ıÍ¨Öª±»»½ĞÑ
-				data = q.back();
-				q.pop_back();			//Êı¾İ³ö¶ÓËø±£»¤
-				locker.unlock();
-				std::cout << "t2 got a value from t1: " << data << std::endl;
-			}
+			cond.wait(locker, [] {return !q.empty(); });  //é™·å…¥ä¼‘çœ ä»¥ç­‰å¾…é€šçŸ¥è¢«å”¤é†’
+			data = q.back();
+			q.pop_back();			//æ•°æ®å‡ºé˜Ÿé”ä¿æŠ¤
+			locker.unlock();
+			std::cout << "t2 got a value from t1: " << data << std::endl;
 		}
 	}
 	void test21()
@@ -492,94 +488,94 @@ namespace practices
 	mutex lock;
 	void func_thread() {
 		for (int i = 0; i < 1000000; ++i) {
-			total += 1;// ¶ÔÈ«¾ÖÊı¾İ½øĞĞÎŞËø·ÃÎÊ
+			total += 1;// å¯¹å…¨å±€æ•°æ®è¿›è¡Œæ— é”è®¿é—®
 		}
 	}
 	void test23()
 	{
-		clock_t start = clock();    // ¼ÆÊ±¿ªÊ¼
+		clock_t start = clock();    // è®¡æ—¶å¼€å§‹
 		thread t1(func_thread);
 		thread t2(func_thread);
 		t1.join();
 		t2.join();
-		clock_t end = clock();    // ¼ÆÊ±½áÊø
+		clock_t end = clock();    // è®¡æ—¶ç»“æŸ
 		cout << "total = " << total << endl;
 		cout << "time = " << end - start << " ms\n";
 	}
 
 	void test24()
 	{
-		//»ñÈ¡×ÔepochÒÔÀ´µÄÃëÊı
+		//è·å–è‡ªepochä»¥æ¥çš„ç§’æ•°
 		time_t now = time(NULL);
-		cout << "1970µ½Ä¿Ç°¾­¹ıÃëÊı£º" << now << endl;
+		cout << "1970åˆ°ç›®å‰ç»è¿‡ç§’æ•°ï¼š" << now << endl;
 
-		//°Ñnow×ª³ÉÄ¬ÈÏ×Ö·û´®¸ñÊ½
+		//æŠŠnowè½¬æˆé»˜è®¤å­—ç¬¦ä¸²æ ¼å¼
 		char* dt = ctime(&now);
-		cout << "Ä¬ÈÏ¸ñÊ½Êä³ö±¾µØÊ±¼äÈÕÆÚ£º" << dt;
+		cout << "é»˜è®¤æ ¼å¼è¾“å‡ºæœ¬åœ°æ—¶é—´æ—¥æœŸï¼š" << dt;
 
-		//°Ñnow×ª³Étm½á¹¹
+		//æŠŠnowè½¬æˆtmç»“æ„
 		tm* ltm = localtime(&now);
-		cout << "tm½á¹¹Êä³ö±¾µØÊ±¼äÈÕÆÚ£º" <<
-			1900 + ltm->tm_year << "Äê" << 1 + ltm->tm_mon << "ÔÂ" << ltm->tm_mday << "ÈÕ" 
+		cout << "tmç»“æ„è¾“å‡ºæœ¬åœ°æ—¶é—´æ—¥æœŸï¼š" <<
+			1900 + ltm->tm_year << "å¹´" << 1 + ltm->tm_mon << "æœˆ" << ltm->tm_mday << "æ—¥" 
 			<< ltm->tm_hour << ":" << ltm->tm_min << ":" << ltm->tm_sec << endl;
 
-		//°Ñltm×ª³É×Ô¶¨Òå¸ñÊ½
+		//æŠŠltmè½¬æˆè‡ªå®šä¹‰æ ¼å¼
 		char buffer[80];
 		strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", ltm);
-		printf("×Ô¶¨Òå¸ñÊ½»¯Êä³ö±¾µØÊ±¼äÈÕÆÚ£º|%s|\n", buffer);
+		printf("è‡ªå®šä¹‰æ ¼å¼åŒ–è¾“å‡ºæœ¬åœ°æ—¶é—´æ—¥æœŸï¼š|%s|\n", buffer);
 	}
 
 	void test25()
 	{
-		//»ñÈ¡×ÔepochÒÔÀ´µÄÃëÊı
+		//è·å–è‡ªepochä»¥æ¥çš„ç§’æ•°
 		time_t now = time(NULL);
-		cout << "1970µ½Ä¿Ç°¾­¹ıÃëÊı£º" << now << endl;
+		cout << "1970åˆ°ç›®å‰ç»è¿‡ç§’æ•°ï¼š" << now << endl;
 
-		//chrono»ñÈ¡Ê±¼ä
+		//chronoè·å–æ—¶é—´
 		auto now2 = chrono::system_clock::now();
-		cout << "1970µ½Ä¿Ç°¾­¹ıÃëÊı£º" << chrono::duration_cast<chrono::seconds>(now2.time_since_epoch()).count() << endl;
+		cout << "1970åˆ°ç›®å‰ç»è¿‡ç§’æ•°ï¼š" << chrono::duration_cast<chrono::seconds>(now2.time_since_epoch()).count() << endl;
 
-		//chrono»ñÈ¡Ê±¼ä
+		//chronoè·å–æ—¶é—´
 		auto now3 = chrono::steady_clock::now();
-		cout << "1970µ½Ä¿Ç°¾­¹ıÃëÊı£º" << chrono::duration_cast<chrono::minutes>(now3.time_since_epoch()).count() << endl;
+		cout << "1970åˆ°ç›®å‰ç»è¿‡ç§’æ•°ï¼š" << chrono::duration_cast<chrono::minutes>(now3.time_since_epoch()).count() << endl;
 	}
 
 	void test26()
 	{
-		//»ñÈ¡µ±Ç°Ê±¼ä
+		//è·å–å½“å‰æ—¶é—´
 		using namespace chrono;
-		typedef duration<int, ratio<60 * 60 * 24 * 7>> weeks_type;//×Ô¶¨ÒåÒ»¸öÊ±¼ä¼ä¸ô£ºĞÇÆÚ
+		typedef duration<int, ratio<60 * 60 * 24 * 7>> weeks_type;//è‡ªå®šä¹‰ä¸€ä¸ªæ—¶é—´é—´éš”ï¼šæ˜ŸæœŸ
 		time_point now = system_clock::now();
-		auto now_seconds = time_point_cast<seconds>(now);//×ª³ÉÒÔÃëÎªµ¥Î»µÄÊ±¼äµã
-		auto now_weeks = time_point_cast<weeks_type>(now);//×ª³ÉÒÔĞÇÆÚÎªµ¥Î»µÄÊ±¼äµã
+		auto now_seconds = time_point_cast<seconds>(now);//è½¬æˆä»¥ç§’ä¸ºå•ä½çš„æ—¶é—´ç‚¹
+		auto now_weeks = time_point_cast<weeks_type>(now);//è½¬æˆä»¥æ˜ŸæœŸä¸ºå•ä½çš„æ—¶é—´ç‚¹
 		auto nowDuration = now.time_since_epoch();
-		cout << "¼ÍÔªµ½Ä¿Ç°¾­¹ıÊ±¼ä£º" << now.time_since_epoch().count() << endl;
-		cout << "¼ÍÔªµ½Ä¿Ç°¾­¹ıÃëÊı£º" << now_seconds.time_since_epoch().count() << endl;
-		cout << "¼ÍÔªµ½Ä¿Ç°¾­¹ıĞÇÆÚÊı£º" << now_weeks.time_since_epoch().count() << endl;
+		cout << "çºªå…ƒåˆ°ç›®å‰ç»è¿‡æ—¶é—´ï¼š" << now.time_since_epoch().count() << endl;
+		cout << "çºªå…ƒåˆ°ç›®å‰ç»è¿‡ç§’æ•°ï¼š" << now_seconds.time_since_epoch().count() << endl;
+		cout << "çºªå…ƒåˆ°ç›®å‰ç»è¿‡æ˜ŸæœŸæ•°ï¼š" << now_weeks.time_since_epoch().count() << endl;
 
-		//time_point×ª³Étime_t
+		//time_pointè½¬æˆtime_t
 		auto timet = chrono::system_clock::to_time_t(now);
 		char* dt = ctime(&timet);
-		cout << "±¾µØÊ±¼äÈÕÆÚ£º" << dt;
+		cout << "æœ¬åœ°æ—¶é—´æ—¥æœŸï¼š" << dt;
 	}
 
 	void test27()
 	{
 		string str1 = "abc123", str2 = "###ABC123";
-		regex r("[a-z0-9]+");//ÓÉ×ÖÄ¸»òÕßÊı×Ö×é³ÉµÄÒ»¸ö»ò¶à¸ö×Ö·ûĞòÁĞ
+		regex r("[a-z0-9]+");//ç”±å­—æ¯æˆ–è€…æ•°å­—ç»„æˆçš„ä¸€ä¸ªæˆ–å¤šä¸ªå­—ç¬¦åºåˆ—
 
-		//Ê¹ÓÃregex_match¼ì²éÆ¥Åä
+		//ä½¿ç”¨regex_matchæ£€æŸ¥åŒ¹é…
 		cout << "str1 match result: " << regex_match(str1, r) << endl;
 		cout << "str2 match result: " << regex_match(str2, r) << endl;
 
-		//Ê¹ÓÃregex_search¼ì²éÆ¥Åä
+		//ä½¿ç”¨regex_searchæ£€æŸ¥åŒ¹é…
 		cout << "str1 match result: " << regex_search(str1, r) << endl;
 		cout << "str2 match result: " << regex_search(str2, r) << endl;
 	}
 
 	void test28()
 	{
-		using IntFloatString = std::variant<int, float, std::string>; // ¶¨ÒåÖ§³Öint¡¢float¡¢stringÈı¸öÀàĞÍ£¬²¢È¡Ò»¸ö±ğÃû
+		using IntFloatString = std::variant<int, float, std::string>; // å®šä¹‰æ”¯æŒintã€floatã€stringä¸‰ä¸ªç±»å‹ï¼Œå¹¶å–ä¸€ä¸ªåˆ«å
 		try
 		{
 			vector<IntFloatString> vecs{ 10, 20.f, "hello world" };
@@ -599,10 +595,10 @@ namespace practices
 					cout << "std::get<2>(): " << std::get<2>(vecs[i]) << endl;
 			}
 
-			//´íÎóÓÃ·¨
+			//é”™è¯¯ç”¨æ³•
 			IntFloatString i = 10;
-			//cout << std::get<double>(i) << endl;//±àÒë½×¶Î¾Í»á³ö´í£ºÃ»ÓĞdoubleÀàĞÍ
-			cout << std::get<1>(i) << endl;       //µ÷ÊÔ½×¶ÎÅ×³öÒì³££ºintÀàĞÍµÄ±êÖ¾Î»ÊÇ0
+			//cout << std::get<double>(i) << endl;//ç¼–è¯‘é˜¶æ®µå°±ä¼šå‡ºé”™ï¼šæ²¡æœ‰doubleç±»å‹
+			cout << std::get<1>(i) << endl;       //è°ƒè¯•é˜¶æ®µæŠ›å‡ºå¼‚å¸¸ï¼šintç±»å‹çš„æ ‡å¿—ä½æ˜¯0
 		}
 		catch (const std::exception& e)
 		{
@@ -614,5 +610,51 @@ namespace practices
 	{
 
 	}
+
+	void sub_Thread()
+	{
+		std::cout << "sub thread is running.\n";
+	}
+	void test30()
+	{
+		std::thread t(sub_Thread);
+		std::this_thread::sleep_for(std::chrono::microseconds(10));
+		std::cout << "after 2 ms.\n";
+		//t.join();  //é”™è¯¯ï¼Œté”€æ¯ä¹‹å‰æ²¡æœ‰joinæˆ–è€…detch
+	}
+
+	string async_func()
+	{
+		this_thread::sleep_for(chrono::milliseconds(1000));
+		return "hello world";
+	}
+	void do_other_struff() 
+	{
+		this_thread::sleep_for(chrono::milliseconds(500));
+	}
+	void test31()
+	{
+		auto time_start = chrono::steady_clock::now();
+		future<string> res = async(async_func);
+		do_other_struff();
+		cout << "res is: " << res.get() << endl;
+		auto time_end = chrono::steady_clock::now();
+		cout << "time cost: " << 
+			chrono::duration_cast<chrono::milliseconds>(time_end - time_start).count() << endl;
+	}
+
+	//struct MyStruct
+	//{
+	//	int a = 0;
+	//	int b = 5;
+	//	string c = "name";
+	//};
+
+	//void test32()
+	//{
+	//	MyStruct t;
+	//	atomic<string> a("name");
+	//	cout << a.load() << endl;
+	//}
 
 }

@@ -40,5 +40,8 @@ namespace practices
 	void test27();
 	void test28();
 	void test29();
+	void test30();
+	void test31();
+	void test32();
 }
 
