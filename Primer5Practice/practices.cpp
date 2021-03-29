@@ -1,3 +1,4 @@
+#pragma  warning (disable:4996)
 #include "practices.h"
 #include <iostream>
 #include <optional>
@@ -5,6 +6,9 @@
 #include <regex>
 #include <thread>
 #include <mutex>
+#include <deque>
+#include <future>
+#include <chrono>
 using namespace std;
 
 namespace practices
@@ -103,16 +107,10 @@ namespace practices
 		string str = "123>Linjay@gmail.com<123"
 			"123>Linfen@gmail.com<123";
 		regex e("([[:w:]]+)@([[:w:]]+)\.com");
-		smatch m;
-		bool found = regex_search(str, m, e);
-		if (found)
+		for (sregex_iterator it(str.begin(), str.end(), e), end_it; it != end_it; it++)
 		{
-			for (sregex_iterator it(str.begin(), str.end(), e), end_it; it != end_it; it++)
-			{
-				cout << it->str() << endl;
-			}
+			cout << it->str() << endl;
 		}
-		else cout << "Not Found" << endl;
 	}
 
 	void test3()
@@ -141,7 +139,7 @@ namespace practices
 			"123>Xiang@126.com<123";
 		regex e("([[:w:]]+)@([[:w:]]+)\.com");
 		cout << regex_replace(str, e, "$1 is on $2\n", 
-			regex_constants::format_no_copy);
+			regex_constants::format_no_copy/*标志位：表示不输出输入序列中未匹配的部分*/);
 	}
 
 	void test5()
@@ -150,34 +148,35 @@ namespace practices
 			"123>Linfen@qq.com<123"
 			"123>Xiang@126.com<123";
 		regex e("([[:w:]]+)@([[:w:]]+)\.com");
-		smatch m;
-		bool found = regex_search(str, m, e);
-		if (found)
+		for (sregex_iterator it(str.begin(), str.end(), e),
+			end_it; it != end_it; it++)
 		{
-			for (sregex_iterator it(str.begin(), str.end(), e), 
-				end_it; it != end_it; it++)
-			{
-				cout << it->format("$1 is on $2\n");
-			}
+			cout << it->format("$1 is on $2\n");
 		}
-		else cout << "Not Found" << endl;
 	}
 
 	void test6()
 	{
-		const char* s1 = "hello\nworld!";
-		const char* s2 = R"(hello\nworld!)";
+		string s1 = "hello\nworld!";
+		string s2 = R"(hello\nworld!)";
 		string s3 = R"(123\t123)";
+		string s4 = R"(123
+456)";
 		cout << s1 << endl;
 		cout << s2 << endl;
 		cout << s3 << endl;
+		cout << s4 << endl;
 	}
 
 	void test7()
 	{
 		//string s1 = R"(abc"()"def)";       //错误
 		string s1 = R"123(abc"()"def)123";   //正确
+		string s2 = R"123(abc()def)123";	 //正确
+		string s3 = R"123((abc()def))123";   //正确
 		cout << s1 << endl;
+		cout << s2 << endl;
+		cout << s3 << endl;
 	}
 
 	void test8()
@@ -189,24 +188,17 @@ namespace practices
 
 	void test9()
 	{
-		try
-		{
-			string s = "123456.456789";
-			cout << "s=" << s << endl;
-			cout.precision(16);
-			cout << "stoi: " << stoi(s) << " to string: " << to_string(stoi(s)) << endl;
-			cout << "stol: " << stol(s) << " to string: " << to_string(stol(s)) << endl;
-			cout << "stoul: " << stoul(s) << " to string: " << to_string(stoul(s)) << endl;
-			cout << "stoll: " << stoll(s) << " to string: " << to_string(stoll(s)) << endl;
-			cout << "stoull: " << stoull(s) << " to string: " << to_string(stoull(s)) << endl;
-			cout << "stof: " << stof(s) << " to string: " << to_string(stof(s)) << endl;
-			cout << "stod: " << stod(s) << " to string: " << to_string(stod(s)) << endl;
-			cout << "stold: " << stold(s) << " to string: " << to_string(stold(s)) << endl;
-		}
-		catch (const std::exception&)
-		{
-			cout << "string converting error" << endl;
-		}
+		string s = "123456.456789";
+		cout << "s=" << s << endl;
+		cout.precision(16);
+		cout << "stoi: " << stoi(s) << ", to_string: " << to_string(stoi(s)) << endl;
+		cout << "stol: " << stol(s) << ", to_string: " << to_string(stol(s)) << endl;
+		cout << "stoul: " << stoul(s) << ", to_string: " << to_string(stoul(s)) << endl;
+		cout << "stoll: " << stoll(s) << ", to_string: " << to_string(stoll(s)) << endl;
+		cout << "stoull: " << stoull(s) << ", to_string: " << to_string(stoull(s)) << endl;
+		cout << "stof: " << stof(s) << ", to_string: " << to_string(stof(s)) << endl;
+		cout << "stod: " << stod(s) << ", to_string: " << to_string(stod(s)) << endl;
+		cout << "stold: " << stold(s) << ", to_string: " << to_string(stold(s)) << endl;
 	}
 
 	long double operator"" _mm(long double x) { return x / 1000; }
@@ -236,6 +228,7 @@ namespace practices
 		int some_i = 0;
 		std::string some_str;
 	};
+	//bool getSome(Some& res, std::vector<Some>& svec, int i)
 	optional<Some> getSome(const std::vector<Some>& svec, int i) {
 		auto iter = std::find_if(svec.begin(), svec.end(), [i](const Some& s) {
 			return s.some_i == i;
@@ -406,6 +399,220 @@ namespace practices
 			printFunc("from main thread: ", i);
 		}
 		t1.join();
+	}
+
+	mutex g_lock; //全局互斥锁对象，#include <mutex>
+	void printer(const char *str) { // 打印机 
+		lock_guard<std::mutex> locker(g_lock);
+		while (*str != '\0') {
+			cout << *str;
+			str++;
+			this_thread::sleep_for(chrono::microseconds(5));
+		}
+		cout << endl;
+	}
+	void func1() {  //子线程
+		printer("hello");
+	}
+	void test19()
+	{
+		thread t1(func1);
+		printer("world");
+		t1.join();
+	}
+
+
+	void subThread()
+	{
+		std::cout << "Starting sub thread.\n";
+		std::this_thread::sleep_for(std::chrono::microseconds(20));
+		std::cout << "Exiting sub thread.\n";
+	}
+	void test20()
+	{
+		std::cout << "Starting call thread.\n";
+		std::thread t(subThread);
+		if(t.joinable()) t.join();
+		std::this_thread::sleep_for(std::chrono::microseconds(10));
+		std::cout << "Exiting call thread.\n";
+		std::this_thread::sleep_for(std::chrono::microseconds(100));//等待子线程结束
+	}
+
+	std::deque<int> q;						//双端队列标准容器全局变量
+	std::mutex mu;							//互斥锁全局变量
+	std::condition_variable cond;           //全局条件变量
+	void function_1() {//生产者，往队列放入数据
+		for (size_t i = 10; i > 0; i--) {
+			std::unique_lock<std::mutex> locker(mu);
+			q.push_front(i);			//数据入队锁保护
+			locker.unlock();
+			cond.notify_one();          //向一个等待线程发出“条件已满足”的通知
+			//cond.notify_all();          //向多个等待线程发出“条件已满足”的通知
+			std::this_thread::sleep_for(std::chrono::seconds(1));		//延时1秒
+		}
+	}
+	void function_2() {//消费者，从队列提取数据
+		int data = 0;
+		while (data != 1) {
+			std::unique_lock<std::mutex> locker(mu);
+			if (!q.empty()) {			//判断队列是否为空
+				while (q.empty())       //判断队列是否为空，唤醒后再次检查队列，还是为空继续休眠等待，防止虚假唤醒
+					cond.wait(locker);  //解锁互斥量并陷入休眠以等待通知被唤醒，被唤醒后加锁以保护共享数据
+				data = q.back();
+				q.pop_back();			//数据出队锁保护
+				locker.unlock();
+				std::cout << "t2 got a value from t1: " << data << std::endl;
+			}
+		}
+	}
+	void test21()
+	{
+		std::thread t1(function_1);
+		std::thread t2(function_2);
+		t1.join();
+		t2.join();
+	}
+	
+	string function_3()
+	{
+		this_thread::sleep_for(chrono::seconds(5));
+		return "name";
+	}
+	void test22()
+	{
+		auto accumulate_future = std::async(std::launch::async, function_3);
+		cout << "get begin" << endl;
+		this_thread::sleep_for(chrono::seconds(5));
+		cout << "sleep for 5 seconds" << endl;
+		cout << accumulate_future.get() << endl;
+		cout << "get end" << endl;
+	}
+
+	atomic<long> total = { 0 };
+	mutex lock;
+	void func_thread() {
+		for (int i = 0; i < 1000000; ++i) {
+			total += 1;// 对全局数据进行无锁访问
+		}
+	}
+	void test23()
+	{
+		clock_t start = clock();    // 计时开始
+		thread t1(func_thread);
+		thread t2(func_thread);
+		t1.join();
+		t2.join();
+		clock_t end = clock();    // 计时结束
+		cout << "total = " << total << endl;
+		cout << "time = " << end - start << " ms\n";
+	}
+
+	void test24()
+	{
+		//获取自epoch以来的秒数
+		time_t now = time(NULL);
+		cout << "1970到目前经过秒数：" << now << endl;
+
+		//把now转成默认字符串格式
+		char* dt = ctime(&now);
+		cout << "默认格式输出本地时间日期：" << dt;
+
+		//把now转成tm结构
+		tm* ltm = localtime(&now);
+		cout << "tm结构输出本地时间日期：" <<
+			1900 + ltm->tm_year << "年" << 1 + ltm->tm_mon << "月" << ltm->tm_mday << "日" 
+			<< ltm->tm_hour << ":" << ltm->tm_min << ":" << ltm->tm_sec << endl;
+
+		//把ltm转成自定义格式
+		char buffer[80];
+		strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", ltm);
+		printf("自定义格式化输出本地时间日期：|%s|\n", buffer);
+	}
+
+	void test25()
+	{
+		//获取自epoch以来的秒数
+		time_t now = time(NULL);
+		cout << "1970到目前经过秒数：" << now << endl;
+
+		//chrono获取时间
+		auto now2 = chrono::system_clock::now();
+		cout << "1970到目前经过秒数：" << chrono::duration_cast<chrono::seconds>(now2.time_since_epoch()).count() << endl;
+
+		//chrono获取时间
+		auto now3 = chrono::steady_clock::now();
+		cout << "1970到目前经过秒数：" << chrono::duration_cast<chrono::minutes>(now3.time_since_epoch()).count() << endl;
+	}
+
+	void test26()
+	{
+		//获取当前时间
+		using namespace chrono;
+		typedef duration<int, ratio<60 * 60 * 24 * 7>> weeks_type;//自定义一个时间间隔：星期
+		time_point now = system_clock::now();
+		auto now_seconds = time_point_cast<seconds>(now);//转成以秒为单位的时间点
+		auto now_weeks = time_point_cast<weeks_type>(now);//转成以星期为单位的时间点
+		auto nowDuration = now.time_since_epoch();
+		cout << "纪元到目前经过时间：" << now.time_since_epoch().count() << endl;
+		cout << "纪元到目前经过秒数：" << now_seconds.time_since_epoch().count() << endl;
+		cout << "纪元到目前经过星期数：" << now_weeks.time_since_epoch().count() << endl;
+
+		//time_point转成time_t
+		auto timet = chrono::system_clock::to_time_t(now);
+		char* dt = ctime(&timet);
+		cout << "本地时间日期：" << dt;
+	}
+
+	void test27()
+	{
+		string str1 = "abc123", str2 = "###ABC123";
+		regex r("[a-z0-9]+");//由字母或者数字组成的一个或多个字符序列
+
+		//使用regex_match检查匹配
+		cout << "str1 match result: " << regex_match(str1, r) << endl;
+		cout << "str2 match result: " << regex_match(str2, r) << endl;
+
+		//使用regex_search检查匹配
+		cout << "str1 match result: " << regex_search(str1, r) << endl;
+		cout << "str2 match result: " << regex_search(str2, r) << endl;
+	}
+
+	void test28()
+	{
+		using IntFloatString = std::variant<int, float, std::string>; // 定义支持int、float、string三个类型，并取一个别名
+		try
+		{
+			vector<IntFloatString> vecs{ 10, 20.f, "hello world" };
+			for (size_t i = 0; i < vecs.size(); i++)
+			{
+				if (std::get_if<int>(&vecs[i]))
+					cout << "std::get<int>(): " << std::get<int>(vecs[i]) << endl;
+				if (std::get_if<float>(&vecs[i]))
+					cout << "std::get<float>(): " << std::get<float>(vecs[i]) << endl;
+				if (std::get_if<string>(&vecs[i]))
+					cout << "std::get<string>(): " << std::get<string>(vecs[i]) << endl;
+				if (std::get_if<0>(&vecs[i]))
+					cout << "std::get<0>(): " << std::get<0>(vecs[i]) << endl;
+				if (std::get_if<1>(&vecs[i]))
+					cout << "std::get<1>(): " << std::get<1>(vecs[i]) << endl;
+				if (std::get_if<2>(&vecs[i]))
+					cout << "std::get<2>(): " << std::get<2>(vecs[i]) << endl;
+			}
+
+			//错误用法
+			IntFloatString i = 10;
+			//cout << std::get<double>(i) << endl;//编译阶段就会出错：没有double类型
+			cout << std::get<1>(i) << endl;       //调试阶段抛出异常：int类型的标志位是0
+		}
+		catch (const std::exception& e)
+		{
+			cout << e.what();
+		}
+	}
+
+	void test29()
+	{
+
 	}
 
 }

@@ -4,6 +4,6 @@
 #include "practices.h" 
 int main()
 {
-	practices::test18();
+	practices::test28();
 	return 0;
 }

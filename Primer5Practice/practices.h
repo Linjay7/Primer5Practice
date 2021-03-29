@@ -29,5 +29,16 @@ namespace practices
 	void test16();
 	void test17();
 	void test18();
+	void test19();
+	void test20();
+	void test21();
+	void test22();
+	void test23();
+	void test24();
+	void test25();
+	void test26();
+	void test27();
+	void test28();
+	void test29();
 }
 
