@@ -456,8 +456,8 @@ namespace practices
 		while (data != 1) {
 			std::unique_lock<std::mutex> locker(mu);
 			if (!q.empty()) {			//判断队列是否为空
-				while (q.empty())       //判断队列是否为空，唤醒后再次检查队列，还是为空继续休眠等待，防止虚假唤醒
-					cond.wait(locker);  //解锁互斥量并陷入休眠以等待通知被唤醒，被唤醒后加锁以保护共享数据
+				while (q.empty())       //判断队列是否为空，唤醒后再次检查队列
+					cond.wait(locker);  //解锁互斥量并陷入休眠以等待通知被唤醒
 				data = q.back();
 				q.pop_back();			//数据出队锁保护
 				locker.unlock();
